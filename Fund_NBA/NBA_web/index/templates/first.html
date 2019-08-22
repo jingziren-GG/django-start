@@ -1,0 +1,73 @@
+{% extends 'model.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>冠军队</title>
+    {% endblock %}
+    {% block modelcss %}
+        <style type="text/css">
+            #first{
+                text-align: left;
+                margin-left: 16%;
+                width: 1400px;
+            }
+            #first div{
+                display: inline-block;
+                position: relative;
+                font-size: 35px;
+                {#background-color: #d8d8d8;#}
+            }
+            h1{
+                margin-left: 5%;
+            }
+            .ballimg{
+                text-align: center;
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+            .ballgeme{
+                width: 180px;
+                color: #d2322d;
+            }
+        </style>
+        <script>
+            console.log({{ nbadata }})
+        </script>
+    {% endblock %}
+</head>
+<body>
+    {% block modeldiv %}
+        {% if nbadata %}
+            <div id="first">
+                <h1>最有可能的冠军队:</h1>
+                <div class="ballimg">
+                    <img src="{{ nbadata.logopath }}" style="width: 100px">
+                </div>
+                <div class="ballgeme">{{ nbadata.area }}/{{ nbadata.ballgame }}</div>
+                <div class="winrate">胜率:{{ nbadata.winrate }}</div>
+            </div>
+        {% else %}
+            <div id="first">
+                <p>没有数据</p>
+            </div>
+        {% endif %}
+        {% if object %}
+            <div id="first">
+                <h1>最有可能的冠军队:</h1>
+                <div class="ballimg">
+                    <img src="{{ object.logopath }}" style="width: 100px">
+                </div>
+                <div class="ballgeme">{{ object.area }}/{{ object.ballgame }}</div>
+                <div class="winrate">胜率:{{ object.winrate }}</div>
+            </div>
+        {% else %}
+            <div id="first">
+                <p>没有数据</p>
+            </div>
+        {% endif %}
+    {% endblock %}
+</body>
+</html>

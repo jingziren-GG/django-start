@@ -1,0 +1,179 @@
+{% extends 'model.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>东部球队展示</title>
+    {% endblock %}
+    {% block modeljs %}
+        <script type="text/javascript" src="{% static 'js/echarts.js' %}"></script>
+        <script src='{% static "js/jquery-3.1.0.js" %}'></script>
+    {% endblock %}
+    {% block modelcss %}
+        <style type="text/css">
+            body{
+                {#text-align:center;#}
+            }
+            #container{
+                width: 1200px;
+                height: 800px;
+                margin-left: 20%;
+
+            }
+            #title_data{
+                margin-left: 20%;
+            }
+            table{
+                text-align: center;
+                font-size: 25px;
+            }
+        </style>
+    {% endblock %}
+</head>
+<body>
+    {% block modeldiv %}
+        <div id="container" style="height: 800px;align: center"></div>
+    {% endblock %}
+    {% if NBAdata %}
+        {% block modelscript %}
+        <script type="text/javascript">
+            var ballgeme_list = new Array;
+            var winlist = new Array;
+            var transportlist = [];
+            var winratelist = [];
+            {% if GGGG %}
+                {% for data in GGGG %}
+                    ballgeme_list.push('{{ data.ballgame }}');
+                    winlist.push('{{ data.win }}');
+                    transportlist.push('{{ data.transport }}');
+                    winratelist.push('{{ data.winrate }}'.replace('%',''));
+                {% endfor %}
+            {% endif %}
+            var dom = document.getElementById("container");
+            var myChart = echarts.init(dom);
+            var app = {};
+            option = null;
+            option = {
+                title : {
+                    text: '东部球队数据',
+                    subtext: 'NBA',
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['胜场(次)','败场(次)','胜率(百分比)']
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ballgeme_list,
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'胜场(次)',
+                        type:'bar',
+                        data:winlist,
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'},
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                            ]
+                        }
+                    },
+                    {
+                        name:'败场(次)',
+                        type:'bar',
+                        data: transportlist,
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'},
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                            ]
+                        }
+                    },
+                    {
+                        name:'胜率(百分比)',
+                        type:'bar',
+                        data: winratelist,
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'},
+                            ]
+                        },
+                        markLine : {
+                            data : [
+
+                            ]
+                        }
+                    }
+                ]
+            };
+            ;
+            if (option && typeof option === "object") {
+                myChart.setOption(option, true);
+            }
+        </script>
+        {% endblock %}
+    {% endif %}
+    {% block modeltable %}
+        <div id="title_data" align="left">
+            <table width="1200px" border="2px" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>排名</td>
+                    <td>球队logo</td>
+                    <td>球队</td>
+                    <td>胜场</td>
+                    <td>输场</td>
+                    <td>胜率</td>
+                </tr>
+                {% if GGGG %}
+                    {% for data in GGGG %}
+                        <tr>
+                            <td>{{ data.ranking }}</td>
+                            <td width="25%">
+                                <a href="{% url 'index:first' data.id %}">
+                                    <img src="{{ data.logopath }}" style="width: 50px">
+                                </a>
+                            </td>
+                            <td>{{ data.ballgame }}</td>
+                            <td>{{ data.win }}</td>
+                            <td>{{ data.transport }}</td>
+                            <td>{{ data.winrate }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <p>Not Datas</p>
+                {% endif %}
+            </table>
+        </div>
+    {% endblock %}
+</body>
+</html>

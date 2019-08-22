@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>My self 首页</title>
+    {% endblock %}
+    <style type="text/css">
+
+
+        .navall{
+            text-align: center;
+            margin-left: 16%;
+            width: 1400px;
+        }
+        .navall div{
+            width: 19%;
+            display: inline-block;
+            position: relative;
+            background-color: #d8d8d8;
+
+        }
+        a{
+            text-decoration:none;
+            color: #131313;
+            font-size: 20px;
+        }
+        a:hover{
+            color: red;
+        }
+        .imgs{
+            text-align: center;
+            margin-left: 16%;
+            width: 1400px;
+        }
+    </style>
+    {% block modeljs %}
+    {% endblock %}
+    {% block modelcss %}
+    {% endblock %}
+</head>
+<body>
+    <div class="navall">
+        <div class="nav1">
+            <a href="{% url 'index:homepage' %}">首页</a>
+        </div>
+        <div class="nav2">
+            <a href="{% url 'index:east' %}">东部球队数据</a>
+        </div>
+        <div class="nav3">
+            <a href="{% url 'index:west' %}">西部球队数据</a>
+        </div>
+        <div class="nav4">
+            <a href="{% url 'index:index' %}">全部球队数据</a>
+        </div>
+        <div class="nav5">
+            <a href="{% url 'index:first' 1 %}">一键冠军队</a>
+        </div>
+        <p></p>
+    </div>
+    {% block modelimg %}
+        <div class="imgs">
+            <img src="{% static 'images/timg.jpg' %}" width="1400px">
+        </div>
+    {% endblock %}
+    {% block modeldiv %}
+    {% endblock %}
+    {% block modeltable %}
+    {% endblock %}
+    {% block modelscript %}
+    {% endblock %}
+</body>
+</html>

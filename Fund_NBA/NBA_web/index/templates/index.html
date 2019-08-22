@@ -1,0 +1,148 @@
+{% extends 'model.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>展示球队</title>
+    {% endblock %}
+    {% block modeljs %}
+        <script type="text/javascript" src="{% static 'js/echarts.js' %}"></script>
+        <script src='{% static "js/jquery-3.1.0.js" %}'></script>
+    {% endblock %}
+    {% block modelcss %}
+        <style type="text/css">
+            #container{
+                width: 1350px;
+                padding-left:18%;
+            }
+            #title_data{
+                margin-left: 18%;
+            }
+            table{
+                text-align: center;
+                font-size: 25px;
+            }
+        </style>
+    {% endblock %}
+</head>
+<body style="height: 100%; margin: 0">
+    {% block modeldiv %}
+        <div id="container" style="height: 800px"></div>
+    {% endblock %}
+    {% block modelscript %}
+        <script type="text/javascript">
+            function xman() {
+                var ballgeme_list = new Array;
+                var winlist = new Array;
+                var transportlist = [];
+                var winratelist = [];
+                {% if GGGG %}
+                    {% for data in GGGG %}
+                        ballgeme_list.push("{{ data.area }}/"+'{{ data.ballgame }}');
+                        winlist.push('{{ data.win }}');
+                        transportlist.push('{{ data.transport }}');
+                        winratelist.push('{{ data.winrate }}'.replace('%',''));
+                    {% endfor %}
+                {% endif %}
+                var dom = document.getElementById("container");
+                var myChart = echarts.init(dom);
+                var app = {};
+                option = null;
+                app.title = '球队展示';
+                option = {
+                    title: {
+                        text: 'NBA球队全数据',
+                        fontSize:35,
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    legend: {
+                        data: ['胜', '败', '胜率(百分比)']
+                    },
+                    grid: {
+                        left: '2%',
+                        right: '2%',
+                        bottom: '2%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'value',
+                        boundaryGap: [0, 0.01]
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: ballgeme_list.reverse(),
+                    },
+                    series: [
+                        {
+                            name: '胜',
+                            type: 'bar',
+                            data: winlist.reverse(),
+                        },
+                        {
+                            name: '败',
+                            type: 'bar',
+                            data: transportlist.reverse(),
+                        },
+                        {
+                            name: '胜率(百分比)',
+                            type: 'bar',
+                            data: winratelist.reverse(),
+                        }
+                    ]
+                };
+                ;
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                };
+                {#$('#container').css({'width': '70%'});#}
+                {#$('#container>div').css({'width': '1200px'});#}
+                {#$('#container>div>canvas').css({'width': '1200px'});#}
+            }
+            //
+            window.addEventListener('load',xman);
+            // 将事件添加到监听器函数附加到窗口的resize 事件
+            window.addEventListener('resize',xman);
+
+            // 第一次调用
+            xman();
+        </script>
+    {% endblock %}
+    {% block modeltable %}
+        <div id="title_data" align="left">
+            <table width="1350px" border="2px" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>球队logo</td>
+                    <td>球队</td>
+                    <td>东/西部</td>
+                    <td>胜场</td>
+                    <td>输场</td>
+                    <td>胜率</td>
+                </tr>
+                {% if GGGG %}
+                    {% for data in GGGG %}
+                        <tr>
+                            <td width="25%">
+                                <img src="{{ data.logopath }}" style="width: 50px">
+                            </td>
+                            <td>{{ data.ballgame }}</td>
+                            <td>{{ data.area }}</td>
+                            <td>{{ data.win }}</td>
+                            <td>{{ data.transport }}</td>
+                            <td>{{ data.winrate }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <p>暂无数据</p>
+                {% endif %}
+            </table>
+    {% endblock %}
+    </div>
+</body>
+</html>
